@@ -1,0 +1,192 @@
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--
+	<link rel="shortcut icon" href="img/favicon_fb.png" type="image/png">
+	-->
+    <title>SecondStream PRO</title>
+
+    <link rel="stylesheet" href="/libs/css/bootstrap.min.css">
+
+    <script src="/libs/jquery-3.3.1.min.js"></script>
+    <script src="/libs/popper.min.js"></script>
+    <script src="/libs/js/bootstrap.min.js"></script>
+
+    <style>
+      .progress{
+
+      margin-top:0px;
+      margin-bottom:40px;
+      height:50px;
+      font-size: 24px;
+
+      }
+
+      .progress-bar{
+       color:white;
+      }
+
+      .vote_title {
+        font-size: 24px;
+        font-weight: bold;
+      }
+      #vote_bar_1{
+        background-color: #007bff;
+      }
+
+      #vote_bar_2{
+        background-color: #17a2b8;
+      }
+
+      #vote_bar_3{
+        background-color: #ffc107;
+      }
+      #vote_bar_4{
+        background-color: #28a745;
+      }
+      #vote_bar_5{
+        background-color: #6f42c1;
+      }
+
+    </style>
+
+    <script>
+      $(document).ready(on_ready);
+
+      var G_GET_DATA_FUNCTION = undefined;
+
+      function on_ready(){
+          var test = getParameterByName('test', false);
+          if(test){
+            G_GET_DATA_FUNCTION = get_fake_data;
+          }else{
+            G_GET_DATA_FUNCTION = get_real_data;
+          }
+
+          G_GET_DATA_FUNCTION();
+      }
+
+      function get_real_data(){
+        $.getJSON('/vote_result_json.php', on_response);
+      }
+
+      // ----------------------------------
+      // for test. use query:  ?test=1
+      var G_TEST_TICK = 0; // for fake data only
+      function get_fake_data(){
+        G_TEST_TICK += 100;
+        var data = {options:['Who Are You', 'Position number 2', 'Doctor Doctor', 'All Night Long', 'Moscow Calling'],
+                   results:[G_TEST_TICK+10,G_TEST_TICK+100,G_TEST_TICK+10,G_TEST_TICK+10,G_TEST_TICK+1], total:1000};
+        on_response(data);
+      }
+      // ----------------------------------
+
+
+      function on_response(data){
+        for(var i=0;i<data.options.length;i++){
+	         show_one_item(i+1, data.options[i], data.results[i], data.total);
+        }
+
+        setTimeout(G_GET_DATA_FUNCTION, 1000);
+      }
+
+
+      function show_one_item(ind, title, val, total){
+	      console.log(ind, title, val, total);
+	      if(!title){
+          $('#vote_block_' + ind).hide();
+          return;
+        }
+
+        if(total == 0)
+            total = 1;
+
+        var proc = Number((100*val/total).toFixed(2));
+        $('#vote_block_'+ind).show();
+        $('#vote_title_'+ind).html(title);
+        $('#vote_bar_'+ind).css('width', proc + '%');
+        $('#vote_bar_'+ind).html(val + ' (' + proc + '% )');
+
+     }
+
+     // utility for get query parameter
+     function getParameterByName(name, default_value)
+     {
+       name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+       var regexS = "[\\?&]"+name+"=([^&#]*)";
+       var regex = new RegExp( regexS );
+       var results = regex.exec( window.location.href );
+
+       if(results == null)
+         return default_value;
+       else
+         return results[1];
+     }
+
+
+    </script>
+
+  </head>
+
+  <body style="background-color: rgba(128,128,128,0);">
+
+    <div class="container" style1="background:green;">
+      <div class="row h-100">
+        <div class="col-sm-12 my-auto">
+
+
+          <div id="vote_block_1" class="vote_block">
+            <span class="vote_title" id="vote_title_1">--</span>
+            <div class="progress" id="vote_progress_1">
+              <div class="progress-bar progress-bar-striped"  id="vote_bar_1" style="width:0%">0%</div>
+            </div>
+          </div>
+
+
+          <div id="vote_block_2" class="vote_block">
+            <span class="vote_title" id="vote_title_2">--</span>
+            <div class="progress" id="vote_progress_2">
+              <div class="progress-bar progress-bar-striped"  id="vote_bar_2" style="width:0%">0%</div>
+            </div>
+          </div>
+
+
+          <div id="vote_block_3" class="vote_block">
+            <span class="vote_title" id="vote_title_3">--</span>
+            <div class="progress" id="vote_progress_3">
+              <div class="progress-bar progress-bar-striped"  id="vote_bar_3" style="width:0%">0%</div>
+            </div>
+          </div>
+
+
+
+          <div id="vote_block_4" class="vote_block">
+            <span class="vote_title" id="vote_title_4">--</span>
+            <div class="progress" id="vote_progress_4">
+              <div class="progress-bar progress-bar-striped"  id="vote_bar_4" style="width:0%">0%</div>
+            </div>
+          </div>
+
+
+
+          <div id="vote_block_5" class="vote_block">
+            <span class="vote_title" id="vote_title_5">--</span>
+            <div class="progress" id="vote_progress_5">
+              <div class="progress-bar progress-bar-striped"  id="vote_bar_5" style="width:0%">0%</div>
+            </div>
+          </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+
+
+</html>

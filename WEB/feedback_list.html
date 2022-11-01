@@ -1,0 +1,60 @@
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--
+	<link rel="shortcut icon" href="img/favicon_fb.png" type="image/png">
+	-->
+    <title></title>
+
+    <link rel="stylesheet" href="/libs/css/bootstrap.min.css">
+
+    <script src="/libs/jquery-3.3.1.min.js"></script>
+    <script src="/libs/popper.min.js"></script>
+    <script src="/libs/js/bootstrap.min.js"></script>
+    
+    <script src="/libs/vue.min.js"></script>
+
+
+    <style>
+      body {
+        font-family: helvetica, arial, sans-serif;
+        background-color:#2B3140;
+        
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+
+    <div class="container" id="main" style="padding-top:10px;">
+
+      <div  v-show="items.length==0" class="alert alert-primary" role="alert">
+	No questions
+      </div>
+	<center style="color:white;"><h2>Questions</h2></center>      
+      <div class="card text-white bg-primary mb-10" style="margin-bottom:10px;"
+	   v-for="item in items">
+	<div class="card-header text-right"><i>{{ item.info.name}}</i></div>
+	<div class="card-body">
+	  {{ item.info.msg }} 
+	</div>
+      </div>
+    
+      
+    </div>
+
+    
+    
+  </body>
+
+  
+  <script src="moderator.js"></script>
+    
+  
+</html>

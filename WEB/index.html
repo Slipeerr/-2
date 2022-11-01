@@ -1,0 +1,269 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--
+  <link rel="shortcut icon" href="img/favicon_fb.png" type="image/png">
+-->
+<title>SecondStream PRO</title>
+
+<link rel="stylesheet" href="/libs/css/bootstrap.min.css">
+
+<script src="/libs/jquery-3.3.1.min.js"></script>
+<script src="/libs/popper.min.js"></script>
+<script src="/libs/js/bootstrap.min.js"></script>
+
+<script src="/libs/nosleep.min.js"></script>
+
+<script src="/jsmpeg.min.my.js"></script>
+
+<script src="/clientcmd.js?v=1"></script>
+<script src="/sstream.js?v=7"></script>
+
+<link rel="stylesheet" href="/base_style.css">
+
+<script>
+$(document).ready(on_ready);
+</script>
+
+</head>
+
+<body id="mainBody">
+
+  <div class="container-fluid" style="margin-top:3px;">
+
+    <div id="sideBar" style="z-index:10;">
+
+      <button type="button" class="btn btn-light btn-sm" onclick="toggleSideSbar();">
+        <img src="/img/menu.png"/>
+      </button>
+
+      <div id="sideSubBar" class="rounded-right">
+        <button type="button" class="btn  btn-light btn-sm" onclick="to_full_screen('mainBody');">
+          <img src="/img/fullscreen-enter-4x.png"/>
+        </button>
+        <br/>
+
+        <button type="button" class="btn  btn-light btn-sm" style="margin-top:20px;margin-bottom:20px;" onclick="open_question_modal();">
+          <img src="/img/chat-4x.png"/>
+        </button>
+      </div>
+
+    </div>
+
+
+    <div style="position:relative;display:none;" id="videoContainer">
+      <div id="myPoster" onclick="pressStart()" class="img-fluid mx-auto"  style="z-index: 3; position:absolute;left:0;right:0;margin:auto; cursor: pointer;">
+        <div style="position:absolute;left:0;right:0;max-width:300px;margin:auto;text-align:center;font-size:30px;" id="tOvrl"></div>
+        <img id="poster_img" class="img-fluid mx-auto d-block" src="/img/POSTER.jpg"/>
+        <svg id="play_button" style="position: absolute;top: 0px; bottom: 0px; left: 0px; right: 0px; margin:auto;max-width: 75px; max-height: 75px;" viewBox="0 0 200 200" alt="Play video"><circle cx="100" cy="100" r="90" fill="none" stroke-width="15" stroke="#fff"></circle><polygon points="70, 55 70, 145 145, 100" fill="#fff"></polygon></svg>
+      </div>
+
+      <canvas id="video-canvas" class="img-fluid mx-auto d-block" width="960" height="540">
+      </canvas>
+    </div>
+
+  </div>
+
+  <p style="margin-bottom:20px;"></p>
+
+
+<!-- #############################################  -->
+<!-- Question Modal -->
+  <div id="questionModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+
+        <div class="modal-body">
+
+          <form id="dlg_form">
+            <div class="form-group">
+              <input type="text" class="form-control" id="username" placeholder="Your name">
+            </div>
+
+            <div class="form-group">
+              <textarea id="message" class="form-control"
+              rows="4"
+              placeholder="your message for speaker"></textarea>
+            </div>
+          </form>
+
+
+          <div id="dlg_success" class="alert alert-info">
+            Your message has been sent successfully.
+          </div>
+
+          <div id="dlg_error" class="alert alert-danger">
+            Failed. Please try again.
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="send_btn" onclick="send_message()">Send</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+<!-- #############################################  -->
+
+  <!-- Game OVERLAY -->
+  <div id="gameModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+      <div class="modal-content" id="gameContentWrapper">
+        <div class="modal-body" style="color:black;text-align:center;" >
+          <div class="progress" id="gameProgressWrapper">
+            <div id="gameProgress" class="progress-bar progress-bar-striped" role="progressbar" style="width:0%">
+            </div>
+          </div>
+
+          <div id="gameContent">
+          </div>
+
+        </div>
+
+        <div class="modal-footer" id="gameClose">
+          <button type="button" class="btn btn-secondary" onclick="random_game_close()">Close</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+<!-- #############################################  -->
+
+  <!-- VOTE OVERLAY -->
+  <div id="voteModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <div class="modal-content" id="voteContentWrapper">
+      <div class="modal-body" style="color:black;text-align:center;" >
+
+        <div id="voteTitle">
+          <!-- vote title -->
+        </div>
+
+
+        <div class="alert vote-option text-left" id="vote_block_1">
+          <input type="radio" class="voteradio float-left" name="vote_result" value="1">
+          <span id="vote_option_1"></span>
+        </div>
+
+
+        <div class="alert vote-option text-left" id="vote_block_2">
+          <input type="radio" class="voteradio float-left" name="vote_result" value="2">
+          <span id="vote_option_2"></span>
+        </div>
+
+
+        <div class="alert vote-option text-left" id="vote_block_3">
+          <input type="radio" class="voteradio float-left" name="vote_result" value="3">
+          <span id="vote_option_3"></span>
+        </div>
+
+
+        <div class="alert vote-option text-left" id="vote_block_4">
+          <input type="radio" class="voteradio float-left" name="vote_result" value="4">
+          <span id="vote_option_4"></span>
+        </div>
+
+
+        <div class="alert vote-option text-left" id="vote_block_5">
+          <input type="radio" class="voteradio float-left" name="vote_result" value="5">
+          <span id="vote_option_5"></span>
+        </div>
+
+
+        <div class="row">
+          <div class="col-6">
+            <button type="button" class="btn btn-secondary" onclick="vote_close()">Ignore</button>
+          </div>
+          <div class="col-6">
+            <button type="button" class="btn btn-primary" onclick="vote_submit()">Submit</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- #############################################  -->
+
+
+
+<!-- #############################################  -->
+
+  <!-- QUIZ OVERLAY -->
+  <div id="quizModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+
+    <div class="modal-content" id="quizContentWrapper" style="background-color: rgb(0,0,0,0.5);">
+      <div class="modal-body" style="color:black;text-align:center;" >
+
+        <div style="color:white;margin-bottom:10px;" id="quizTitle">
+          <!-- quiz title -->1
+        </div>
+
+        <div class="row">
+
+          <div class="col-sm-12 col-md-5 alert alert-info text-left quizblock" id="quiz_block_1">
+            <input type="radio" class="voteradio float-left" name="quiz_result" value="1">
+            <span id="quiz_option_1"></span>
+          </div>
+
+
+          <div class="col-sm-12 col-md-5 ml-md-auto alert alert-info text-left  quizblock" id="quiz_block_2">
+            <input type="radio" class="voteradio float-left" name="quiz_result" value="2">
+            <span id="quiz_option_2"></span>
+          </div>
+
+
+          <div class="col-sm-12 col-md-5 alert alert-info text-left  quizblock" id="quiz_block_3">
+            <input type="radio" class="voteradio float-left" name="quiz_result" value="3">
+            <span id="quiz_option_3"></span>
+          </div>
+
+
+          <div class="col-sm-12 col-md-5 ml-md-auto alert alert-info text-left  quizblock" id="quiz_block_4">
+            <input type="radio" class="voteradio float-left" name="quiz_result" value="4">
+            <span id="quiz_option_4"></span>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <button type="button" class="btn btn-secondary" onclick="vote_close()">Ignore</button>
+          </div>
+          <div class="col-6">
+            <button type="button" class="btn btn-primary" onclick="vote_submit()">Submit</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- #############################################  -->
+
+
+
+
+
+</body>
+
+
+
+</html>
